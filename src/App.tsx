@@ -4,7 +4,7 @@ import type { Store, MonthPlan, DayPlan } from './types'
 import { getStores, addStore, updateStore, deleteStore, getPlan, savePlan, getSettings } from './storage'
 import { StoreList } from './components/StoreList'
 import { StoreForm } from './components/StoreForm'
-import { MonthCalendar } from './components/MonthCalendar'
+import { CalendarView } from './components/CalendarView'
 import { DayRunSheet } from './components/DayRunSheet'
 import { PlanControls } from './components/PlanControls'
 import { SettingsPage } from './components/SettingsPage'
@@ -173,7 +173,7 @@ function App() {
               error={error}
             />
             <div className="flex-1 overflow-hidden">
-              <MonthCalendar
+              <CalendarView
                 currentDate={currentDate}
                 onDateChange={setCurrentDate}
                 plan={plan}

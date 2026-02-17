@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import type { Store, Grade, Frequency } from '../types'
+import { SuburbAutocomplete } from './SuburbAutocomplete'
 
 interface StoreFormProps {
   store?: Store | null
@@ -78,13 +79,10 @@ export function StoreForm({ store, onSave, onCancel }: StoreFormProps) {
 
       <div>
         <label className={labelClasses}>Suburb *</label>
-        <input
-          type="text"
+        <SuburbAutocomplete
           value={suburb}
-          onChange={e => setSuburb(e.target.value)}
+          onChange={setSuburb}
           required
-          placeholder="e.g. Mooloolaba"
-          className={inputClasses}
         />
       </div>
 

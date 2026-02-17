@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { Settings } from '../types'
 import { getSettings, saveSettings } from '../storage'
+import { SuburbAutocomplete } from './SuburbAutocomplete'
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -20,12 +21,10 @@ export function SettingsPage() {
 
       <div>
         <label className={labelClasses}>Home Suburb</label>
-        <input
-          type="text"
+        <SuburbAutocomplete
           value={settings.homeSuburb}
-          onChange={e => setSettings(s => ({ ...s, homeSuburb: e.target.value }))}
+          onChange={v => setSettings(s => ({ ...s, homeSuburb: v }))}
           placeholder="e.g. North Lakes"
-          className={inputClasses}
         />
         <p className="text-xs text-[#847a6e] mt-1 font-medium">Start/end point for daily routes</p>
       </div>
