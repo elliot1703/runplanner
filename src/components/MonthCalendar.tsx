@@ -8,11 +8,9 @@ import {
   addMonths,
   subMonths,
   isToday,
-  isSameMonth,
 } from 'date-fns'
 import type { Store, MonthPlan, DayPlan } from '../types'
 import { TIER_COLORS } from '../types'
-import { TierBadge } from './TierBadge'
 import { getSettings } from '../storage'
 
 interface MonthCalendarProps {

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import './App.css'
 import type { Store, MonthPlan, DayPlan } from './types'
-import { getStores, saveStores, addStore, updateStore, deleteStore, getPlan, savePlan, getSettings } from './storage'
+import { getStores, addStore, updateStore, deleteStore, getPlan, savePlan, getSettings } from './storage'
 import { StoreList } from './components/StoreList'
 import { StoreForm } from './components/StoreForm'
 import { MonthCalendar } from './components/MonthCalendar'
