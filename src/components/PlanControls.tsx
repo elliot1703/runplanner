@@ -15,21 +15,21 @@ export function PlanControls({ stores, plan, isGenerating, onGenerate, error }: 
   const hasStores = stores.length > 0
 
   return (
-    <div className="px-4 pb-3">
+    <div className="px-5 pb-3">
       {error && (
-        <div className="bg-red-50 text-red-700 text-sm px-3 py-2 rounded-lg mb-2">
+        <div className="bg-[#b5462a]/10 text-[#b5462a] text-sm px-3 py-2 rounded-xl mb-2 font-semibold">
           {error}
         </div>
       )}
 
       {!hasApiKey && (
-        <div className="bg-amber-50 text-amber-700 text-sm px-3 py-2 rounded-lg mb-2">
+        <div className="bg-[#f8f2ea] text-[#8a6240] text-sm px-3 py-2 rounded-xl mb-2 font-semibold">
           Add your Claude API key in Settings to generate plans.
         </div>
       )}
 
       {!hasStores && (
-        <div className="bg-gray-50 text-gray-500 text-sm px-3 py-2 rounded-lg mb-2">
+        <div className="bg-[#f5f2ee] text-[#847a6e] text-sm px-3 py-2 rounded-xl mb-2 font-semibold">
           Add stores first, then generate a plan.
         </div>
       )}
@@ -37,7 +37,7 @@ export function PlanControls({ stores, plan, isGenerating, onGenerate, error }: 
       <button
         onClick={onGenerate}
         disabled={isGenerating || !hasApiKey || !hasStores}
-        className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium text-base disabled:opacity-40 active:bg-blue-700 flex items-center justify-center gap-2"
+        className="w-full bg-[#5c4033] text-white py-3 rounded-xl font-bold text-base disabled:opacity-40 active:bg-[#4a332a] flex items-center justify-center gap-2 transition-colors"
       >
         {isGenerating ? (
           <>
@@ -52,12 +52,12 @@ export function PlanControls({ stores, plan, isGenerating, onGenerate, error }: 
       </button>
 
       {plan && (
-        <p className="text-xs text-gray-400 text-center mt-1">
+        <p className="text-xs text-[#847a6e] text-center mt-1 font-medium">
           Generated {new Date(plan.generatedAt).toLocaleString()}
         </p>
       )}
 
-      <p className="text-xs text-gray-400 text-center mt-1">
+      <p className="text-xs text-[#847a6e] text-center mt-1 font-medium">
         Double-tap a day to block/unblock it
       </p>
     </div>

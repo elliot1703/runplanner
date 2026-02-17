@@ -1,4 +1,5 @@
 import type { Store, MonthPlan, Settings } from './types'
+import { migrateStore } from './types'
 
 const STORES_KEY = 'runplanner_stores'
 const PLAN_KEY = 'runplanner_plan'
@@ -7,7 +8,9 @@ const SETTINGS_KEY = 'runplanner_settings'
 // Stores
 export function getStores(): Store[] {
   const data = localStorage.getItem(STORES_KEY)
-  return data ? JSON.parse(data) : []
+  if (!data) return []
+  const raw = JSON.parse(data) as any[]
+  return raw.map(migrateStore)
 }
 
 export function saveStores(stores: Store[]) {

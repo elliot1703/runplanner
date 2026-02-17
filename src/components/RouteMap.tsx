@@ -87,11 +87,10 @@ interface RouteMapProps {
   containerId: string
 }
 
-const TIER_HEX: Record<string, string> = {
-  A: '#dc2626',
-  B: '#f59e0b',
-  C: '#3b82f6',
-  D: '#6b7280',
+const GRADE_HEX: Record<string, string> = {
+  A: '#5c4033',
+  B: '#8a6240',
+  C: '#6b6560',
 }
 
 export function RouteMap({ stores, homeSuburb, containerId }: RouteMapProps) {
@@ -130,7 +129,7 @@ export function RouteMap({ stores, homeSuburb, containerId }: RouteMapProps) {
       L.marker(homeCoords, {
         icon: L.divIcon({
           className: '',
-          html: `<div style="background:#16a34a;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);">H</div>`,
+          html: `<div style="background:#527a3a;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.3);">H</div>`,
           iconSize: [28, 28],
           iconAnchor: [14, 14],
         }),
@@ -147,7 +146,7 @@ export function RouteMap({ stores, homeSuburb, containerId }: RouteMapProps) {
         : getCoords(store.suburb)
 
       if (coords) {
-        const color = TIER_HEX[store.tier] || '#6b7280'
+        const color = GRADE_HEX[store.grade] || '#6b6560'
         L.marker(coords, {
           icon: L.divIcon({
             className: '',
@@ -157,7 +156,7 @@ export function RouteMap({ stores, homeSuburb, containerId }: RouteMapProps) {
           }),
         })
           .addTo(map)
-          .bindPopup(`${store.name} (Tier ${store.tier})`)
+          .bindPopup(`${store.name} (Grade ${store.grade})`)
         points.push(coords)
       }
     })
@@ -165,7 +164,7 @@ export function RouteMap({ stores, homeSuburb, containerId }: RouteMapProps) {
     // Draw route line
     if (points.length > 1) {
       L.polyline(points, {
-        color: '#2563eb',
+        color: '#5c4033',
         weight: 3,
         opacity: 0.6,
         dashArray: '8, 8',

@@ -10,7 +10,7 @@ import {
   isToday,
 } from 'date-fns'
 import type { Store, MonthPlan, DayPlan } from '../types'
-import { TIER_COLORS } from '../types'
+import { GRADE_CHIP_COLORS } from '../types'
 import { getSettings } from '../storage'
 
 interface MonthCalendarProps {
@@ -52,37 +52,38 @@ export function MonthCalendar({
     return map
   }, [plan])
 
-  // Group days into weeks (Mon=0 ... Sun=6 for grid)
   function getMondayBasedDay(date: Date): number {
-    const d = getDay(date) // 0=Sun
-    return d === 0 ? 6 : d - 1 // Mon=0 ... Sun=6
+    const d = getDay(date)
+    return d === 0 ? 6 : d - 1
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-[#faf9f6]">
       {/* Month navigation */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-3">
+      <div className="flex items-center justify-between px-5 pt-4 pb-3">
         <button
           onClick={() => onDateChange(subMonths(currentDate, 1))}
-          className="p-2 rounded-lg active:bg-gray-100 text-gray-600"
+          className="p-2 rounded-xl active:bg-[#f5eeea] text-[#847a6e] transition-colors"
         >
           &larr;
         </button>
-        <h1 className="text-xl font-bold">{format(currentDate, 'MMMM yyyy')}</h1>
+        <h1 className="font-[family-name:var(--font-display)] text-xl font-semibold text-[#3d3529]">
+          {format(currentDate, 'MMMM yyyy')}
+        </h1>
         <button
           onClick={() => onDateChange(addMonths(currentDate, 1))}
-          className="p-2 rounded-lg active:bg-gray-100 text-gray-600"
+          className="p-2 rounded-xl active:bg-[#f5eeea] text-[#847a6e] transition-colors"
         >
           &rarr;
         </button>
       </div>
 
       {/* Day headers */}
-      <div className="grid grid-cols-7 px-2">
+      <div className="grid grid-cols-7 px-3">
         {DAY_HEADERS.map(d => (
           <div
             key={d}
-            className="text-center text-xs font-medium text-gray-500 py-1"
+            className="text-center text-[11px] font-bold text-[#847a6e] py-1 uppercase tracking-wide"
           >
             {d}
           </div>
@@ -90,11 +91,11 @@ export function MonthCalendar({
       </div>
 
       {/* Calendar grid */}
-      <div className="flex-1 overflow-y-auto px-2 pb-20">
-        <div className="grid grid-cols-7 gap-px bg-gray-200 rounded-lg overflow-hidden">
+      <div className="flex-1 overflow-y-auto px-3 pb-20">
+        <div className="grid grid-cols-7 gap-px bg-[#e8e2d8] rounded-2xl overflow-hidden">
           {/* Leading empty cells */}
           {Array.from({ length: getMondayBasedDay(calendarDays[0]) }).map((_, i) => (
-            <div key={`empty-${i}`} className="bg-gray-50 min-h-[80px]" />
+            <div key={`empty-${i}`} className="bg-[#f5f2ee] min-h-[80px]" />
           ))}
 
           {calendarDays.map(day => {
@@ -117,21 +118,21 @@ export function MonthCalendar({
                 onDoubleClick={() => {
                   if (isWorkDay) onToggleBlock(dateStr)
                 }}
-                className={`min-h-[80px] p-1 ${
+                className={`min-h-[80px] p-1.5 transition-colors ${
                   isBlocked
-                    ? 'bg-gray-300'
+                    ? 'bg-[#e8e2d8]'
                     : isWorkDay
                       ? 'bg-white'
-                      : 'bg-gray-50'
-                } ${today ? 'ring-2 ring-blue-500 ring-inset' : ''} ${
-                  visits.length > 0 && isWorkDay ? 'cursor-pointer active:bg-blue-50' : ''
+                      : 'bg-[#f5f2ee]'
+                } ${today ? 'ring-2 ring-[#5c4033] ring-inset' : ''} ${
+                  visits.length > 0 && isWorkDay ? 'cursor-pointer active:bg-[#faf9f6]' : ''
                 }`}
               >
-                <div className={`text-xs font-medium mb-0.5 ${
-                  today ? 'text-blue-600' : isWorkDay ? 'text-gray-700' : 'text-gray-400'
+                <div className={`text-[11px] font-bold mb-0.5 ${
+                  today ? 'text-[#5c4033]' : isWorkDay ? 'text-[#3d3529]' : 'text-[#847a6e]'
                 }`}>
                   {format(day, 'd')}
-                  {isBlocked && <span className="ml-1 text-red-500">blocked</span>}
+                  {isBlocked && <span className="ml-1 text-[#b5462a] text-[9px]">blocked</span>}
                 </div>
                 {visits.slice(0, 4).map((visit, i) => {
                   const store = storeMap.get(visit.storeId)
@@ -139,14 +140,14 @@ export function MonthCalendar({
                   return (
                     <div
                       key={i}
-                      className={`text-[10px] leading-tight truncate px-1 py-0.5 rounded mb-0.5 ${TIER_COLORS[store.tier]}`}
+                      className={`text-[10px] leading-tight truncate px-1.5 py-0.5 rounded-lg mb-0.5 font-bold ${GRADE_CHIP_COLORS[store.grade]}`}
                     >
                       {store.name}
                     </div>
                   )
                 })}
                 {visits.length > 4 && (
-                  <div className="text-[10px] text-gray-500 px-1">+{visits.length - 4} more</div>
+                  <div className="text-[10px] text-[#847a6e] px-1 font-semibold">+{visits.length - 4} more</div>
                 )}
               </div>
             )

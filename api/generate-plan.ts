@@ -4,7 +4,7 @@ interface Store {
   id: string
   name: string
   suburb: string
-  tier: 'A' | 'B' | 'C' | 'D'
+  grade: 'A' | 'B' | 'C'
   frequency: 'twice-weekly' | 'weekly' | 'fortnightly' | 'monthly'
   monthlySpend: number
   newLinesThisMonth: number
@@ -36,19 +36,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Build the prompt
   const storeDescriptions = (stores as Store[])
     .sort((a, b) => {
-      const tierOrder = { A: 0, B: 1, C: 2, D: 3 }
-      return tierOrder[a.tier] - tierOrder[b.tier] || b.monthlySpend - a.monthlySpend
+      const gradeOrder = { A: 0, B: 1, C: 2 }
+      return gradeOrder[a.grade] - gradeOrder[b.grade] || b.monthlySpend - a.monthlySpend
     })
     .map(s => {
       const score = s.monthlySpend + (s.newLinesThisMonth * 500)
-      return `- ${s.name} (${s.suburb}) | Tier ${s.tier} | ${s.frequency} (${FREQUENCY_VISITS[s.frequency]} visits/month) | Spend: $${s.monthlySpend}/mo | New lines: ${s.newLinesThisMonth} | Score: ${score} | Rescheduled this month: ${s.rescheduledCount}x | ID: ${s.id}${s.notes ? ` | Notes: ${s.notes}` : ''}`
+      return `- ${s.name} (${s.suburb}) | Grade ${s.grade} | ${s.frequency} (${FREQUENCY_VISITS[s.frequency]} visits/month) | Spend: $${s.monthlySpend}/mo | New lines: ${s.newLinesThisMonth} | Score: ${score} | Rescheduled this month: ${s.rescheduledCount}x | ID: ${s.id}${s.notes ? ` | Notes: ${s.notes}` : ''}`
     })
     .join('\n')
 
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const workDayNames = (workDays as number[]).map(d => dayNames[d]).join(', ')
 
-  // Calculate all work days for the month
   const monthDate = new Date(year, month, 1)
   const monthName = monthDate.toLocaleString('en-AU', { month: 'long', year: 'numeric' })
 
@@ -67,7 +66,7 @@ Generate an optimized monthly visit schedule for ${monthName}.
 ${storeDescriptions}
 
 ## Scheduling Rules
-1. **Tier Priority:** Schedule Tier A stores first on their preferred consistent days. Then B, C, D.
+1. **Grade Priority:** Schedule Grade A stores first on their preferred consistent days. Then B, then C.
 2. **Frequency:** Each store must appear exactly the number of times dictated by its frequency.
 3. **Geographic Grouping:** Group stores in the same suburb or nearby suburbs on the same day.
    - North Brisbane suburbs (North Lakes, Redcliffe, Caboolture, Morayfield) should cluster together
@@ -75,9 +74,9 @@ ${storeDescriptions}
    - Northern coast suburbs (Noosa, Coolum, Nambour) should cluster together
 4. **Route Order:** Within each day, order visits from south to north (leaving from ${homeSuburb}) or north to south (returning), whichever is more efficient. The rep should not zigzag.
 5. **Even Distribution:** Spread visits evenly across work days. Aim for 3-5 stores per day. Never exceed 6.
-6. **Consistency:** Tier A and B stores should ideally be on the same day each week for relationship building.
+6. **Consistency:** Grade A and B stores should ideally be on the same day each week for relationship building.
 7. **Blocked Days:** Never schedule visits on blocked days. If a blocked day has existing visits, those stores should be redistributed following the rescheduling priority.
-8. **Rescheduling Priority:** When space is tight, bump lowest priority first: Tier D (lowest score) → Tier C (lowest score) → Tier B → Tier A. Use rescheduledCount as tiebreaker (bump the store with lower reschedule count to spread pain evenly).
+8. **Rescheduling Priority:** When space is tight, bump lowest priority first: Grade C (lowest score) → Grade B (lowest score) → Grade A. Use rescheduledCount as tiebreaker (bump the store with lower reschedule count to spread pain evenly).
 
 ## Output Format
 Return ONLY valid JSON matching this exact structure (no markdown, no explanation):
